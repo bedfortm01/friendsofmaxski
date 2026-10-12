@@ -264,12 +264,19 @@
     font: 500 1rem var(--body); cursor: pointer;
   }
 
-  .proto-note {
-    margin: 0;
-    padding-block: 18px 36px;
-    color: var(--muted);
-    font-size: 0.9rem;
+  .cta:disabled { cursor: progress; filter: saturate(0.6); }
+  .privacy { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 60ch; }
+  .privacy a, .send-error a { color: var(--teal-ink); font-weight: 400; text-underline-offset: 3px; }
+  .send-error {
+    border: 1.5px solid var(--error);
+    background: var(--error-wash);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    max-width: 60ch;
   }
+  .send-error p { margin: 0; }
+  .send-error p + p { margin-top: 6px; }
+  main { padding-bottom: 36px; }
 
   /* confirmation */
   .done { padding-block: 36px 12px; display: flex; flex-direction: column; gap: 18px; }
@@ -366,20 +373,28 @@
         <div class="contact">
           <div>
             <label class="field-label" for="lead-name">Your name</label>
-            <input type="text" id="lead-name" autocomplete="name" aria-describedby="err-name">
+            <input type="text" id="lead-name" autocomplete="name" maxlength="100" aria-describedby="err-name">
             <p class="error" id="err-name" role="alert" hidden></p>
           </div>
           <div>
             <label class="field-label" for="lead-email">Email address</label>
-            <input type="email" id="lead-email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" aria-describedby="err-email">
+            <input type="email" id="lead-email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="254" aria-describedby="err-email">
             <p class="error" id="err-email" role="alert" hidden></p>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Spam trap: hidden from people, bots tick it. Web3Forms drops submissions where botcheck is set. -->
+    <input type="checkbox" name="botcheck" id="botcheck" class="hidden" style="display: none;" tabindex="-1" autocomplete="off" aria-hidden="true">
+
     <div class="actions">
+      <p class="privacy">We'll only use your details to prepare and send your quote. See our <a href="https://www.maxski.com/privacy-policy/">privacy policy</a>.</p>
       <button type="submit" class="cta" id="submit-quote">Get my quote</button>
+      <div class="send-error" id="send-error" role="alert" hidden>
+        <p><strong>Sorry, we couldn't send your request just now.</strong></p>
+        <p>Your answers are still here, so you can try again. If it still won't send, email us at <a href="mailto:hello@maxski.com">hello@maxski.com</a> and we'll put your quote together.</p>
+      </div>
     </div>
   </form>
 
@@ -388,17 +403,19 @@
     <p class="lead" id="done-lead"></p>
     <dl class="summary" id="summary"></dl>
     <div class="btn-row">
-      <button type="button" class="secondary" id="edit-details">Change my details</button>
-      <button type="button" class="secondary" id="start-again">Start again</button>
+      <button type="button" class="secondary" id="start-again">Start a new request</button>
     </div>
   </section>
-
-  <p class="proto-note">This is a prototype. Nothing you type here is saved or sent, and no quote will be emailed.</p>
 </main>
 
 <script>
 (function () {
   var MAX_PER_ROOM = 4, MAX_AIRPORTS = 3, MAX_ROOMS = 5;
+  var MAX_NAME = 100, MAX_EMAIL = 254, SEND_TIMEOUT_MS = 15000;
+  var WEB3FORMS_URL = 'https://api.web3forms.com/submit';
+  var WEB3FORMS_KEY = '70c25378-2c57-4fbd-ae12-303752893ab2'; // public by design: Web3Forms keys only allow sending to the key owner's inbox
+  var ALLOWED_DATES = ['2027-02-13', '2027-03-27'];
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   var AIRPORTS = [
     { id: 'lba', name: 'Leeds Bradford', top: true },
@@ -464,8 +481,11 @@
       $(a.top ? 'airports-top' : 'airports-more').appendChild(chip);
     });
   }
-  function onAirport() {
-    state.airports = AIRPORTS.filter(function (a) { return $('airport-' + a.id).checked; }).map(function (a) { return a.id; });
+  // Keep airports in the order the family ticked them.
+  function onAirport(e) {
+    var id = e.target.value, at = state.airports.indexOf(id);
+    if (e.target.checked && at < 0 && state.airports.length < MAX_AIRPORTS) state.airports.push(id);
+    else if (!e.target.checked && at > -1) state.airports.splice(at, 1);
     syncAirports();
     if (state.airports.length) setError('err-airports', '');
   }
@@ -587,21 +607,36 @@
     function fail(el) { if (!first) first = el; }
 
     var date = $('travel-date');
-    if (!date.value) { setError('err-date', 'Choose a travel date.', date); fail(date); } else setError('err-date', '', date);
+    if (ALLOWED_DATES.indexOf(date.value) < 0) { setError('err-date', 'Choose a travel date.', date); fail(date); } else setError('err-date', '', date);
 
-    if (!state.airports.length) { setError('err-airports', 'Pick at least one airport.'); fail($('airport-lba')); } else setError('err-airports', '');
+    var knownAirports = state.airports.every(function (id) { return AIRPORTS.some(function (a) { return a.id === id; }); });
+    if (!state.airports.length) { setError('err-airports', 'Pick at least one airport.'); fail($('airport-lba')); }
+    else if (state.airports.length > MAX_AIRPORTS || !knownAirports) { setError('err-airports', 'Pick up to three airports from the list.'); fail($('airport-lba')); }
+    else setError('err-airports', '');
+
+    if (!(state.roomCount >= 1 && state.roomCount <= MAX_ROOMS)) { state.roomCount = 1; $('bedrooms').value = '1'; fail($('bedrooms')); }
 
     state.showAgeErrors = true;
     renderRooms();
     var badAge = $('rooms').querySelector('select[aria-invalid="true"]');
     if (badAge) fail(badAge);
+    for (var i = 0; i < state.roomCount; i++) {
+      var r = state.rooms[i];
+      var ok = r.adults >= 1 && r.adults + r.children.length <= MAX_PER_ROOM &&
+        r.children.every(function (a) { return a == null || (a >= 0 && a <= 17); });
+      if (!ok) fail($('room-' + (i + 1) + '-adults-minus'));
+    }
 
     var name = $('lead-name');
-    if (!name.value.trim()) { setError('err-name', 'Tell us your name.', name); fail(name); } else setError('err-name', '', name);
+    var nameVal = name.value.trim();
+    if (!nameVal) { setError('err-name', 'Tell us your name.', name); fail(name); }
+    else if (nameVal.length > MAX_NAME) { setError('err-name', 'Keep your name under ' + MAX_NAME + ' characters.', name); fail(name); }
+    else setError('err-name', '', name);
 
     var email = $('lead-email');
-    var ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
-    if (!ok) { setError('err-email', 'Enter an email address, like name@example.com.', email); fail(email); } else setError('err-email', '', email);
+    var emailVal = email.value.trim();
+    if (!EMAIL_RE.test(emailVal) || emailVal.length > MAX_EMAIL) { setError('err-email', 'Enter an email address, like name@example.com.', email); fail(email); }
+    else setError('err-email', '', email);
 
     return first;
   }
@@ -612,28 +647,88 @@
     return h('div', null, h('dt', { text: term }), dd);
   }
 
-  function showDone() {
-    var name = $('lead-name').value.trim();
-    var email = $('lead-email').value.trim();
-    $('done-title').textContent = 'Thanks, ' + name.split(/\s+/)[0] + '. We have your details.';
-    $('done-lead').textContent = 'We will send your quote to ' + email + '.';
+  function airportNames() {
+    return state.airports.map(function (id) {
+      for (var i = 0; i < AIRPORTS.length; i++) if (AIRPORTS[i].id === id) return AIRPORTS[i].name;
+      return id;
+    });
+  }
 
-    var airports = AIRPORTS.filter(function (a) { return state.airports.indexOf(a.id) > -1; }).map(function (a) { return a.name; });
-    var roomLines = [];
+  function roomLines() {
+    var lines = [];
     for (var i = 0; i < state.roomCount; i++) {
       var r = state.rooms[i];
       var line = 'Room ' + (i + 1) + ': ' + plural(r.adults, 'adult', 'adults');
       if (r.children.length) {
-        line += ', ' + plural(r.children.length, 'child', 'children') + ' (aged ' + r.children.map(ageLabel).join(', ') + ')';
+        line += ', ' + plural(r.children.length, 'child', 'children') + ' (aged ' + r.children.map(ageLabel).join(', ') + ' at departure)';
       }
-      roomLines.push(line);
+      lines.push(line);
     }
+    return lines;
+  }
+
+  // Plain-text body for the email the Max Ski team receives.
+  function messageText(name, email) {
+    return [
+      'Travel date: ' + dateLabel(),
+      'Preferred airports (in order chosen): ' + airportNames().join(', '),
+      'Bedrooms: ' + state.roomCount,
+      '',
+      'Who is travelling:'
+    ].concat(roomLines(), [
+      '',
+      'Name: ' + name,
+      'Email: ' + email
+    ]).join('\n');
+  }
+
+  function setSending(on) {
+    var btn = $('submit-quote');
+    btn.disabled = on;
+    btn.textContent = on ? 'Sending…' : 'Get my quote';
+  }
+
+  // Resolves only when Web3Forms confirms success; rejects on network error, timeout or a Web3Forms error.
+  function sendQuote(name, email) {
+    var payload = {
+      access_key: WEB3FORMS_KEY,
+      subject: 'Max Ski quote request: ' + name,
+      from_name: 'Max Ski quote form',
+      name: name,
+      email: email,
+      replyto: email,
+      message: messageText(name, email)
+    };
+    if ($('botcheck').checked) payload.botcheck = true;
+
+    var controller = 'AbortController' in window ? new AbortController() : null;
+    var timer = controller ? setTimeout(function () { controller.abort(); }, SEND_TIMEOUT_MS) : null;
+
+    return fetch(WEB3FORMS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller ? controller.signal : undefined
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (json) {
+        if (!res.ok || !json || json.success !== true) throw new Error((json && json.message) || 'HTTP ' + res.status);
+        return json;
+      });
+    }).finally(function () { if (timer) clearTimeout(timer); });
+  }
+
+  function showDone() {
+    var name = $('lead-name').value.trim();
+    var email = $('lead-email').value.trim();
+    $('done-title').textContent = 'Thanks, ' + name.split(/\s+/)[0] + '. Your quote request has been sent.';
+    $('done-lead').textContent = 'The Max Ski team will be in touch at ' + email + '. Here is what you sent us.';
+
     var s = $('summary');
     s.textContent = '';
     s.appendChild(summaryRow('Travel date', [dateLabel()]));
-    s.appendChild(summaryRow('Airports', [airports.join(', ')]));
+    s.appendChild(summaryRow('Airports', [airportNames().join(', ')]));
     s.appendChild(summaryRow('Bedrooms', [String(state.roomCount)]));
-    s.appendChild(summaryRow('Travellers', roomLines));
+    s.appendChild(summaryRow('Travellers', roomLines()));
     s.appendChild(summaryRow('Name', [name]));
     s.appendChild(summaryRow('Email', [email]));
 
@@ -677,17 +772,33 @@
   });
   $('lead-name').addEventListener('input', function (e) { if (e.target.value.trim()) setError('err-name', '', e.target); });
   $('lead-email').addEventListener('input', function (e) { if ($('err-email').hidden === false && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.target.value.trim())) setError('err-email', '', e.target); });
+  var sending = false;
   $('quote-form').addEventListener('submit', function (e) {
     e.preventDefault();
+    if (sending) return;
+    $('send-error').hidden = true;
     var first = validate();
     if (first) {
       first.focus();
       if (first.scrollIntoView) first.scrollIntoView({ block: 'center' });
       return;
     }
-    showDone();
+    sending = true;
+    setSending(true);
+    var name = $('lead-name').value.trim(), email = $('lead-email').value.trim();
+    var attempt;
+    try { attempt = sendQuote(name, email); } catch (err) { attempt = Promise.reject(err); }
+    attempt.then(function () {
+      showDone();
+    }, function (err) {
+      if (window.console) console.warn('Quote request not sent:', err && err.message);
+      $('send-error').hidden = false;
+      $('send-error').scrollIntoView && $('send-error').scrollIntoView({ block: 'center' });
+    }).then(function () {
+      sending = false;
+      setSending(false);
+    });
   });
-  $('edit-details').addEventListener('click', function () { showForm(); $('travel-date').focus(); });
   $('start-again').addEventListener('click', function () { reset(); $('travel-date').focus(); });
 })();
 </script>
