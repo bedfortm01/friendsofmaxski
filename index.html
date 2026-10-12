@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Max Ski quote request landing page</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=Rubik:wght@300;400;500&display=swap">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<style>
+  /* Layout: one left-aligned column, 720px wide. A tinted hero band with the offer,
+     then five questions in order on white, one call to action at the end.
+     Single light look on purpose, so every tester sees the same Max Ski page. */
+  :root {
+    --teal: #00c6a5;        /* Max Ski primary */
+    --teal-deep: #12888c;   /* Max Ski primary, headlines */
+    --teal-ink: #0c6b6f;    /* darker step of the teal, for small text and filled controls */
+    --orange: #ff9800;      /* Max Ski primary, call to action */
+    --white: #ffffff;
+    --blue: #034694;        /* logo blue */
+    --blue-mid: #0c6bbb;    /* logo blue, focus ring */
+    --ink: #10283a;
+    --muted: #4c6475;
+    --wash: #ecf9f6;
+    --line: #cfe6e3;
+    --line-strong: #8fb9b7;
+    --error: #b3261e;
+    --error-wash: #fdf0ee;
+
+    --display: "Nunito Sans", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --body: "Rubik", "Helvetica Neue", Arial, system-ui, sans-serif;
+
+    --gutter: 20px;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--white);
+    color: var(--ink);
+    font-family: var(--body);
+    font-weight: 300;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* ---------- header and hero ---------- */
+  .hero { background: var(--wash); }
+  .brandbar { padding-block: 18px 0; }
+  .wordmark {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+    color: var(--blue);
+  }
+  .hero-copy {
+    padding-block: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(1.9rem, 6.4vw, 2.9rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--teal-deep);
+    text-wrap: balance;
+  }
+  .lead { margin: 0; font-size: 1.12rem; max-width: 60ch; }
+  .hero-copy p { margin: 0; max-width: 60ch; }
+  .ridge { display: block; width: 100%; height: auto; }
+
+  /* ---------- form ---------- */
+  form { padding-block: 8px 24px; }
+  .q {
+    padding: 28px 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .q:last-of-type { border-bottom: 0; }
+  .q-head { display: flex; align-items: flex-start; gap: 12px; padding: 0; }
+  .q-num {
+    flex: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: var(--ink);
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 0.95rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .q-title {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.32rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .hint { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  .q-body { display: flex; flex-direction: column; gap: 12px; }
+
+  label.field-label { font-weight: 400; font-size: 0.95rem; display: block; margin-bottom: 6px; }
+
+  select, input[type="text"], input[type="email"] {
+    width: 100%;
+    min-height: 50px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius);
+    background-color: var(--white);
+    color: var(--ink);
+    font: 400 1rem/1.3 var(--body);
+  }
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 44px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1.5 1.5l5.5 5.5 5.5-5.5' stroke='%230c6b6f' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+  }
+  .narrow { max-width: 360px; }
+  .tiny { max-width: 150px; }
+
+  :is(select, input, button):focus-visible,
+  .chip input:focus-visible + span {
+    outline: 3px solid var(--blue-mid);
+    outline-offset: 2px;
+  }
+  :is(select, input[type="text"], input[type="email"])[aria-invalid="true"] { border-color: var(--error); background-color: var(--error-wash); }
+
+  .error {
+    margin: 0;
+    color: var(--error);
+    font-weight: 400;
+    font-size: 0.95rem;
+  }
+
+  /* airports */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    margin: 0; opacity: 0; cursor: pointer;
+  }
+  .chip span {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 48px;
+    padding: 0 18px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--white);
+    font-weight: 400;
+  }
+  .chip input:checked + span {
+    background: var(--teal-ink);
+    border-color: var(--teal-ink);
+    color: var(--white);
+    font-weight: 500;
+  }
+  .chip input:checked + span::before {
+    content: "";
+    width: 6px; height: 11px;
+    border: solid var(--white);
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .chip input:disabled { cursor: not-allowed; }
+  .chip input:disabled + span { color: var(--muted); border-color: var(--line); background: var(--wash); }
+
+  .link-btn {
+    align-self: flex-start;
+    background: none; border: 0; padding: 6px 0;
+    color: var(--teal-ink);
+    font: 500 1rem var(--body);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  /* rooms */
+  .rooms { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; align-items: start; }
+  .room {
+    background: var(--wash);
+    border-radius: 14px;
+    padding: 16px 18px 18px;
+    display: flex; flex-direction: column; gap: 12px;
+    min-width: 0;
+  }
+  .room-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .room-name { margin: 0; font-family: var(--display); font-weight: 800; font-size: 1.08rem; }
+  .room-count { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .row-label { font-weight: 400; }
+  .row-label small { display: block; font-weight: 300; font-size: 0.88rem; color: var(--muted); }
+  .stepper { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+  .stepper button {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--teal-ink);
+    background: var(--white);
+    color: var(--teal-ink);
+    font: 500 1.4rem/1 var(--body);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 0 2px;
+  }
+  .stepper button:hover:not(:disabled) { background: var(--teal-ink); color: var(--white); }
+  .stepper button:disabled { border-color: var(--line); color: var(--line-strong); cursor: not-allowed; }
+  .stepper output {
+    min-width: 2ch; text-align: center;
+    font-weight: 500; font-size: 1.2rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .ages {
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .age-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 10px; }
+  .age-grid label { font-weight: 400; font-size: 0.9rem; display: block; margin-bottom: 4px; }
+  .age-grid select { min-height: 46px; }
+  .total { margin: 0; font-weight: 400; }
+
+  .contact { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .contact { grid-template-columns: 1fr; } }
+
+  .actions { padding-block: 8px 8px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .cta {
+    min-height: 56px;
+    padding: 0 30px;
+    border: 0; border-radius: 999px;
+    background: var(--orange);
+    color: var(--ink);
+    font: 900 1.12rem var(--display);
+    cursor: pointer;
+  }
+  .cta:hover { filter: brightness(0.95); }
+  @media (max-width: 560px) { .cta { width: 100%; } }
+  .secondary {
+    min-height: 50px; padding: 0 22px;
+    border: 1.5px solid var(--teal-ink); border-radius: 999px;
+    background: var(--white); color: var(--teal-ink);
+    font: 500 1rem var(--body); cursor: pointer;
+  }
+
+  .proto-note {
+    margin: 0;
+    padding-block: 18px 36px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* confirmation */
+  .done { padding-block: 36px 12px; display: flex; flex-direction: column; gap: 18px; }
+  .done h1:focus { outline: none; }
+  .summary { margin: 0; border-top: 1px solid var(--line); }
+  .summary > div {
+    display: grid; grid-template-columns: 150px 1fr; gap: 12px;
+    padding-block: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .summary dt { color: var(--muted); }
+  .summary dd { margin: 0; font-weight: 400; min-width: 0; overflow-wrap: anywhere; }
+  .summary dd span { display: block; }
+  @media (max-width: 480px) { .summary > div { grid-template-columns: 1fr; gap: 2px; } }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .chip span, .stepper button, .cta { transition: background-color .15s, color .15s, border-color .15s, filter .15s; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brandbar"><span class="wordmark">Max Ski</span></div>
+    <div class="hero-copy" id="hero-copy">
+      <h1>Family and group ski trips in Folgarida 26/27</h1>
+      <p class="lead">A week in Folgarida in the Dolomites, packaged from door to piste. Flights, hotel, lift pass, kit and paperwork all sorted before you land.</p>
+      <p>Share a few details with us for a quote tailored to you. All quotes include bed and breakfast in hotels close to the ski lifts, lift passes and ski equipment.</p>
+    </div>
+    <svg class="ridge" viewBox="0 0 760 120" aria-hidden="true" focusable="false">
+      <circle cx="604" cy="42" r="20" fill="#ff9800"/>
+      <polygon points="0,120 92,52 172,92 270,32 360,96 452,50 540,100 644,60 760,120" fill="#00c6a5"/>
+      <polygon points="40,120 150,78 240,112 340,70 440,114 560,84 660,116 700,104 730,120" fill="#12888c"/>
+      <polygon points="270,32 252,43 266,47 276,42 289,45" fill="#ffffff"/>
+      <polygon points="92,52 78,62.5 90,65 99,61 106,61" fill="#ffffff"/>
+      <polygon points="452,50 438,57 450,61 459,57 465,59" fill="#ffffff"/>
+    </svg>
+  </div>
+</header>
+
+<main class="wrap">
+  <form id="quote-form" novalidate>
+
+    <section class="q" id="q-date" role="group" aria-labelledby="q1-title">
+      <div class="q-head"><span class="q-num" aria-hidden="true">1</span><h2 class="q-title" id="q1-title">When would you like to travel?</h2></div>
+      <div class="q-body">
+        <select id="travel-date" class="narrow" aria-label="Travel date" aria-describedby="err-date">
+          <option value="">Choose a date</option>
+          <option value="2027-02-13">Saturday 13 February 2027</option>
+          <option value="2027-03-27">Saturday 27 March 2027</option>
+        </select>
+        <p class="error" id="err-date" role="alert" hidden></p>
+      </div>
+    </section>
+
+    <section class="q" id="q-airports" role="group" aria-labelledby="q2-title">
+      <div class="q-head"><span class="q-num" aria-hidden="true">2</span><h2 class="q-title" id="q2-title">Which airports would you prefer to travel from?</h2></div>
+      <div class="q-body">
+        <p class="hint" id="airport-hint" aria-live="polite">Pick up to three.</p>
+        <div class="chips" id="airports-top"></div>
+        <div class="chips" id="airports-more" hidden></div>
+        <button type="button" class="link-btn" id="more-airports" aria-expanded="false" aria-controls="airports-more">Show more airports</button>
+        <p class="error" id="err-airports" role="alert" hidden></p>
+      </div>
+    </section>
+
+    <section class="q" id="q-bedrooms" role="group" aria-labelledby="q3-title">
+      <div class="q-head"><span class="q-num" aria-hidden="true">3</span><h2 class="q-title" id="q3-title">How many bedrooms?</h2></div>
+      <div class="q-body">
+        <select id="bedrooms" class="tiny" aria-label="Number of bedrooms">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="q" id="q-travellers" role="group" aria-labelledby="q4-title">
+      <div class="q-head"><span class="q-num" aria-hidden="true">4</span><h2 class="q-title" id="q4-title">Who's travelling?</h2></div>
+      <div class="q-body">
+        <p class="hint">Up to four people in each room, with at least one adult.</p>
+        <div class="rooms" id="rooms"></div>
+        <p class="total" id="total" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="q" id="q-contact" role="group" aria-labelledby="q5-title">
+      <div class="q-head"><span class="q-num" aria-hidden="true">5</span><h2 class="q-title" id="q5-title">Where would you like us to send the quote to?</h2></div>
+      <div class="q-body">
+        <div class="contact">
+          <div>
+            <label class="field-label" for="lead-name">Your name</label>
+            <input type="text" id="lead-name" autocomplete="name" aria-describedby="err-name">
+            <p class="error" id="err-name" role="alert" hidden></p>
+          </div>
+          <div>
+            <label class="field-label" for="lead-email">Email address</label>
+            <input type="email" id="lead-email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" aria-describedby="err-email">
+            <p class="error" id="err-email" role="alert" hidden></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button type="submit" class="cta" id="submit-quote">Get my quote</button>
+    </div>
+  </form>
+
+  <section class="done" id="done" hidden aria-live="polite">
+    <h1 id="done-title" tabindex="-1"></h1>
+    <p class="lead" id="done-lead"></p>
+    <dl class="summary" id="summary"></dl>
+    <div class="btn-row">
+      <button type="button" class="secondary" id="edit-details">Change my details</button>
+      <button type="button" class="secondary" id="start-again">Start again</button>
+    </div>
+  </section>
+
+  <p class="proto-note">This is a prototype. Nothing you type here is saved or sent, and no quote will be emailed.</p>
+</main>
+
+<script>
+(function () {
+  var MAX_PER_ROOM = 4, MAX_AIRPORTS = 3, MAX_ROOMS = 5;
+
+  var AIRPORTS = [
+    { id: 'lba', name: 'Leeds Bradford', top: true },
+    { id: 'man', name: 'Manchester', top: true },
+    { id: 'ncl', name: 'Newcastle', top: true },
+    { id: 'bhx', name: 'Birmingham' },
+    { id: 'brs', name: 'Bristol' },
+    { id: 'ema', name: 'East Midlands' },
+    { id: 'edi', name: 'Edinburgh' },
+    { id: 'gla', name: 'Glasgow' },
+    { id: 'lpl', name: 'Liverpool' },
+    { id: 'lgw', name: 'London Gatwick' },
+    { id: 'lhr', name: 'London Heathrow' },
+    { id: 'ltn', name: 'London Luton' },
+    { id: 'stn', name: 'London Stansted' }
+  ];
+
+  function freshRooms() {
+    var r = [];
+    for (var i = 0; i < MAX_ROOMS; i++) r.push({ adults: 2, children: [] });
+    return r;
+  }
+
+  var state = { rooms: freshRooms(), roomCount: 1, airports: [], showAgeErrors: false };
+
+  function $(id) { return document.getElementById(id); }
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      var v = attrs[k];
+      if (v === false || v == null) return;
+      if (k === 'text') el.textContent = v;
+      else if (k === 'class') el.className = v;
+      else if (k === 'on') Object.keys(v).forEach(function (ev) { el.addEventListener(ev, v[ev]); });
+      else if (v === true) el.setAttribute(k, '');
+      else el.setAttribute(k, v);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c == null || c === false) continue;
+      el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    }
+    return el;
+  }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+  function setError(id, msg, field) {
+    var el = $(id);
+    el.textContent = msg || '';
+    el.hidden = !msg;
+    if (field) { if (msg) field.setAttribute('aria-invalid', 'true'); else field.removeAttribute('aria-invalid'); }
+  }
+  function dateLabel() {
+    var s = $('travel-date');
+    return s.value ? s.options[s.selectedIndex].text : '';
+  }
+  function ageLabel(a) { return a === 0 ? 'under 1' : String(a); }
+
+  /* ---------- airports ---------- */
+  function buildAirports() {
+    AIRPORTS.forEach(function (a) {
+      var input = h('input', { type: 'checkbox', id: 'airport-' + a.id, value: a.id, on: { change: onAirport } });
+      var chip = h('label', { class: 'chip' }, input, h('span', { text: a.name }));
+      $(a.top ? 'airports-top' : 'airports-more').appendChild(chip);
+    });
+  }
+  function onAirport() {
+    state.airports = AIRPORTS.filter(function (a) { return $('airport-' + a.id).checked; }).map(function (a) { return a.id; });
+    syncAirports();
+    if (state.airports.length) setError('err-airports', '');
+  }
+  function syncAirports() {
+    var full = state.airports.length >= MAX_AIRPORTS;
+    AIRPORTS.forEach(function (a) {
+      var box = $('airport-' + a.id);
+      box.checked = state.airports.indexOf(a.id) > -1;
+      box.disabled = full && !box.checked;
+    });
+    var n = state.airports.length;
+    $('airport-hint').textContent = n === 0 ? 'Pick up to three.'
+      : full ? '3 of 3 chosen. Untick one to swap.'
+      : n + ' of 3 chosen.';
+  }
+  function showMoreAirports() {
+    $('airports-more').hidden = false;
+    $('more-airports').hidden = true;
+    $('more-airports').setAttribute('aria-expanded', 'true');
+    var first = $('airports-more').querySelector('input:not(:disabled)');
+    if (first) first.focus();
+  }
+
+  /* ---------- rooms ---------- */
+  function roomEl(i) {
+    var room = state.rooms[i], n = i + 1;
+    var total = room.adults + room.children.length;
+    var full = total >= MAX_PER_ROOM;
+
+    function stepper(kind, value, canMinus, canPlus, noun) {
+      return h('div', { class: 'stepper' },
+        h('button', { type: 'button', id: 'room-' + n + '-' + kind + '-minus', disabled: !canMinus,
+          'aria-label': 'Remove ' + noun + ' from room ' + n, text: '−',
+          on: { click: function () { change(i, kind, -1); } } }),
+        h('output', { id: 'room-' + n + '-' + kind, text: String(value) }),
+        h('button', { type: 'button', id: 'room-' + n + '-' + kind + '-plus', disabled: !canPlus,
+          'aria-label': 'Add ' + noun + ' to room ' + n, text: '+',
+          on: { click: function () { change(i, kind, 1); } } })
+      );
+    }
+
+    var el = h('div', { class: 'room', id: 'room-' + n, role: 'group', 'aria-label': 'Room ' + n },
+      h('div', { class: 'room-head' },
+        h('h3', { class: 'room-name', text: 'Room ' + n }),
+        h('span', { class: 'room-count', text: total + ' of ' + MAX_PER_ROOM + (full ? ', room full' : ' people') })
+      ),
+      h('div', { class: 'row' },
+        h('span', { class: 'row-label' }, 'Adults', h('small', { text: '18 and over' })),
+        stepper('adults', room.adults, room.adults > 1, !full, 'an adult')
+      ),
+      h('div', { class: 'row' },
+        h('span', { class: 'row-label' }, 'Children', h('small', { text: '17 and under' })),
+        stepper('children', room.children.length, room.children.length > 0, !full, 'a child')
+      )
+    );
+
+    if (room.children.length) {
+      var missing = false;
+      var grid = h('div', { class: 'age-grid' });
+      room.children.forEach(function (age, c) {
+        var id = 'room-' + n + '-child-' + (c + 1) + '-age';
+        var sel = h('select', { id: id, on: { change: function (e) {
+          room.children[c] = e.target.value === '' ? null : Number(e.target.value);
+          renderRooms();
+        } } });
+        sel.appendChild(h('option', { value: '', text: 'Age' }));
+        sel.appendChild(h('option', { value: '0', text: 'Under 1' }));
+        for (var a = 1; a <= 17; a++) sel.appendChild(h('option', { value: String(a), text: String(a) }));
+        sel.value = age == null ? '' : String(age);
+        if (age == null && state.showAgeErrors) { sel.setAttribute('aria-invalid', 'true'); missing = true; }
+        grid.appendChild(h('div', null, h('label', { for: id, text: 'Child ' + (c + 1) }), sel));
+      });
+      var when = dateLabel();
+      el.appendChild(h('div', { class: 'ages' },
+        h('p', { class: 'hint', text: 'Age on the day you travel' + (when ? ', ' + when : '') + '.' }),
+        grid,
+        missing ? h('p', { class: 'error', role: 'alert', text: 'Choose an age for each child in room ' + n + '.' }) : null
+      ));
+    }
+    return el;
+  }
+
+  function change(i, kind, delta) {
+    var room = state.rooms[i];
+    var total = room.adults + room.children.length;
+    if (delta > 0 && total >= MAX_PER_ROOM) return;
+    if (kind === 'adults') {
+      if (room.adults + delta < 1) return;
+      room.adults += delta;
+    } else if (delta > 0) {
+      room.children.push(null);
+    } else if (room.children.length) {
+      room.children.pop();
+    }
+    renderRooms();
+  }
+
+  function renderRooms() {
+    var activeId = document.activeElement && document.activeElement.id;
+    var host = $('rooms');
+    host.textContent = '';
+    for (var i = 0; i < state.roomCount; i++) host.appendChild(roomEl(i));
+
+    var adults = 0, kids = 0;
+    for (var j = 0; j < state.roomCount; j++) { adults += state.rooms[j].adults; kids += state.rooms[j].children.length; }
+    $('total').textContent = plural(adults + kids, 'person', 'people') + ' in ' + plural(state.roomCount, 'bedroom', 'bedrooms') +
+      ': ' + plural(adults, 'adult', 'adults') + (kids ? ' and ' + plural(kids, 'child', 'children') : '') + '.';
+
+    if (activeId && activeId.indexOf('room-') === 0) {
+      var back = $(activeId);
+      if (back && back.disabled) back = back.parentNode.querySelector('button:not(:disabled)');
+      if (back) back.focus();
+    }
+  }
+
+  /* ---------- submit ---------- */
+  function validate() {
+    var first = null;
+    function fail(el) { if (!first) first = el; }
+
+    var date = $('travel-date');
+    if (!date.value) { setError('err-date', 'Choose a travel date.', date); fail(date); } else setError('err-date', '', date);
+
+    if (!state.airports.length) { setError('err-airports', 'Pick at least one airport.'); fail($('airport-lba')); } else setError('err-airports', '');
+
+    state.showAgeErrors = true;
+    renderRooms();
+    var badAge = $('rooms').querySelector('select[aria-invalid="true"]');
+    if (badAge) fail(badAge);
+
+    var name = $('lead-name');
+    if (!name.value.trim()) { setError('err-name', 'Tell us your name.', name); fail(name); } else setError('err-name', '', name);
+
+    var email = $('lead-email');
+    var ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+    if (!ok) { setError('err-email', 'Enter an email address, like name@example.com.', email); fail(email); } else setError('err-email', '', email);
+
+    return first;
+  }
+
+  function summaryRow(term, lines) {
+    var dd = h('dd');
+    lines.forEach(function (l) { dd.appendChild(h('span', { text: l })); });
+    return h('div', null, h('dt', { text: term }), dd);
+  }
+
+  function showDone() {
+    var name = $('lead-name').value.trim();
+    var email = $('lead-email').value.trim();
+    $('done-title').textContent = 'Thanks, ' + name.split(/\s+/)[0] + '. We have your details.';
+    $('done-lead').textContent = 'We will send your quote to ' + email + '.';
+
+    var airports = AIRPORTS.filter(function (a) { return state.airports.indexOf(a.id) > -1; }).map(function (a) { return a.name; });
+    var roomLines = [];
+    for (var i = 0; i < state.roomCount; i++) {
+      var r = state.rooms[i];
+      var line = 'Room ' + (i + 1) + ': ' + plural(r.adults, 'adult', 'adults');
+      if (r.children.length) {
+        line += ', ' + plural(r.children.length, 'child', 'children') + ' (aged ' + r.children.map(ageLabel).join(', ') + ')';
+      }
+      roomLines.push(line);
+    }
+    var s = $('summary');
+    s.textContent = '';
+    s.appendChild(summaryRow('Travel date', [dateLabel()]));
+    s.appendChild(summaryRow('Airports', [airports.join(', ')]));
+    s.appendChild(summaryRow('Bedrooms', [String(state.roomCount)]));
+    s.appendChild(summaryRow('Travellers', roomLines));
+    s.appendChild(summaryRow('Name', [name]));
+    s.appendChild(summaryRow('Email', [email]));
+
+    $('quote-form').hidden = true;
+    $('hero-copy').hidden = true;
+    $('done').hidden = false;
+    window.scrollTo(0, 0);
+    $('done-title').focus();
+  }
+
+  function showForm() {
+    $('done').hidden = true;
+    $('quote-form').hidden = false;
+    $('hero-copy').hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  function reset() {
+    state = { rooms: freshRooms(), roomCount: 1, airports: [], showAgeErrors: false };
+    $('quote-form').reset();
+    ['err-date', 'err-airports', 'err-name', 'err-email'].forEach(function (id) { setError(id, ''); });
+    ['travel-date', 'lead-name', 'lead-email'].forEach(function (id) { $(id).removeAttribute('aria-invalid'); });
+    syncAirports();
+    renderRooms();
+    showForm();
+  }
+
+  /* ---------- wire up ---------- */
+  buildAirports();
+  syncAirports();
+  renderRooms();
+
+  $('more-airports').addEventListener('click', showMoreAirports);
+  $('travel-date').addEventListener('change', function (e) {
+    if (e.target.value) setError('err-date', '', e.target);
+    renderRooms();
+  });
+  $('bedrooms').addEventListener('change', function (e) {
+    state.roomCount = Number(e.target.value);
+    renderRooms();
+  });
+  $('lead-name').addEventListener('input', function (e) { if (e.target.value.trim()) setError('err-name', '', e.target); });
+  $('lead-email').addEventListener('input', function (e) { if ($('err-email').hidden === false && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.target.value.trim())) setError('err-email', '', e.target); });
+  $('quote-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var first = validate();
+    if (first) {
+      first.focus();
+      if (first.scrollIntoView) first.scrollIntoView({ block: 'center' });
+      return;
+    }
+    showDone();
+  });
+  $('edit-details').addEventListener('click', function () { showForm(); $('travel-date').focus(); });
+  $('start-again').addEventListener('click', function () { reset(); $('travel-date').focus(); });
+})();
+</script>
+
+</body>
+</html>
