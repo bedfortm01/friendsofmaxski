@@ -54,13 +54,9 @@
   /* ---------- header and hero ---------- */
   .hero { background: var(--wash); }
   .brandbar { padding-block: 18px 0; }
-  .wordmark {
-    font-family: var(--display);
-    font-weight: 900;
-    font-size: 1.35rem;
-    letter-spacing: -0.01em;
-    color: var(--blue);
-  }
+  .logo-link { display: inline-block; }
+  /* The logo PNG has a white background; multiply lets the hero tint show through it. */
+  .logo { display: block; width: 150px; height: auto; mix-blend-mode: multiply; }
   .hero-copy {
     padding-block: 28px 20px;
     display: flex;
@@ -114,6 +110,7 @@
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
+  .q-intro { margin: 0; max-width: 60ch; }
   .hint { margin: 0; color: var(--muted); font-size: 0.95rem; }
   .q-body { display: flex; flex-direction: column; gap: 12px; }
 
@@ -266,7 +263,7 @@
 
   .cta:disabled { cursor: progress; filter: saturate(0.6); }
   .privacy { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 60ch; }
-  .privacy a, .send-error a { color: var(--teal-ink); font-weight: 400; text-underline-offset: 3px; }
+  .privacy a, .send-error a, .done .lead a { color: var(--teal-ink); font-weight: 400; text-underline-offset: 3px; }
   .send-error {
     border: 1.5px solid var(--error);
     background: var(--error-wash);
@@ -276,7 +273,25 @@
   }
   .send-error p { margin: 0; }
   .send-error p + p { margin-top: 6px; }
-  main { padding-bottom: 36px; }
+  main { padding-bottom: 48px; }
+  .bedrooms-row { max-width: 360px; background: var(--wash); border-radius: 14px; padding: 12px 18px; }
+
+  /* footer, as on www.maxski.com */
+  .site-footer { background: var(--teal); color: var(--ink); font-size: 0.95rem; }
+  .site-footer a { color: var(--ink); text-underline-offset: 3px; }
+  .site-footer p { margin: 0 0 14px; }
+  .footer-cols {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    padding-block: 36px 22px;
+  }
+  @media (max-width: 640px) { .footer-cols { grid-template-columns: 1fr; gap: 6px; } }
+  .footer-links { list-style: none; margin: 0 0 14px; padding: 0; }
+  .footer-links li + li { margin-top: 2px; }
+  .footer-base { background: #39394e; color: #ffffff; font-size: 0.88rem; }
+  .footer-base .wrap { padding-block: 18px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 20px; }
+  .footer-base p { margin: 0; }
+  .footer-base a { color: #ffffff; }
+  .footer-social { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 16px; }
 
   /* confirmation */
   .done { padding-block: 36px 12px; display: flex; flex-direction: column; gap: 18px; }
@@ -302,7 +317,7 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="brandbar"><span class="wordmark">Max Ski</span></div>
+    <div class="brandbar"><a href="https://www.maxski.com/" target="_blank" rel="noopener noreferrer" class="logo-link"><img class="logo" src="images/maxski-logo.png" alt="Max Ski" width="449" height="159"></a></div>
     <div class="hero-copy" id="hero-copy">
       <h1>Family and group ski trips in Folgarida 26/27</h1>
       <p class="lead">A week in Folgarida in the Dolomites, packaged from door to piste. Flights, hotel, lift pass, kit and paperwork all sorted before you land.</p>
@@ -325,17 +340,14 @@
     <section class="q" id="q-date" role="group" aria-labelledby="q1-title">
       <div class="q-head"><span class="q-num" aria-hidden="true">1</span><h2 class="q-title" id="q1-title">When would you like to travel?</h2></div>
       <div class="q-body">
-        <select id="travel-date" class="narrow" aria-label="Travel date" aria-describedby="err-date">
-          <option value="">Choose a date</option>
-          <option value="2027-02-13">Saturday 13 February 2027</option>
-          <option value="2027-03-27">Saturday 27 March 2027</option>
-        </select>
+        <div class="chips" id="dates"></div>
+        <p class="hint" id="date-hint">We're opening up our tours in Folgarida, Italy to select families and groups this ski season. These trips span 7 days and depart on Saturdays on specific dates. Select all the dates you're interested in.</p>
         <p class="error" id="err-date" role="alert" hidden></p>
       </div>
     </section>
 
     <section class="q" id="q-airports" role="group" aria-labelledby="q2-title">
-      <div class="q-head"><span class="q-num" aria-hidden="true">2</span><h2 class="q-title" id="q2-title">Which airports would you prefer to travel from?</h2></div>
+      <div class="q-head"><span class="q-num" aria-hidden="true">2</span><h2 class="q-title" id="q2-title">Select your preferred airports</h2></div>
       <div class="q-body">
         <p class="hint" id="airport-hint" aria-live="polite">Pick up to three.</p>
         <div class="chips" id="airports-top"></div>
@@ -348,13 +360,14 @@
     <section class="q" id="q-bedrooms" role="group" aria-labelledby="q3-title">
       <div class="q-head"><span class="q-num" aria-hidden="true">3</span><h2 class="q-title" id="q3-title">How many bedrooms?</h2></div>
       <div class="q-body">
-        <select id="bedrooms" class="tiny" aria-label="Number of bedrooms">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
+        <div class="row bedrooms-row">
+          <span class="row-label">Bedrooms<small>Up to 5</small></span>
+          <div class="stepper">
+            <button type="button" id="bedrooms-minus" aria-label="Remove a bedroom">−</button>
+            <output id="bedrooms" aria-live="polite">1</output>
+            <button type="button" id="bedrooms-plus" aria-label="Add a bedroom">+</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -368,8 +381,9 @@
     </section>
 
     <section class="q" id="q-contact" role="group" aria-labelledby="q5-title">
-      <div class="q-head"><span class="q-num" aria-hidden="true">5</span><h2 class="q-title" id="q5-title">Where would you like us to send the quote to?</h2></div>
+      <div class="q-head"><span class="q-num" aria-hidden="true">5</span><h2 class="q-title" id="q5-title">Provide your name and email address below</h2></div>
       <div class="q-body">
+        <p class="q-intro">A Max Ski tour coordinator will send a quote to your email address soon.</p>
         <div class="contact">
           <div>
             <label class="field-label" for="lead-name">Your name</label>
@@ -389,7 +403,7 @@
     <input type="checkbox" name="botcheck" id="botcheck" class="hidden" style="display: none;" tabindex="-1" autocomplete="off" aria-hidden="true">
 
     <div class="actions">
-      <p class="privacy">We'll only use your details to prepare and send your quote. See our <a href="https://www.maxski.com/privacy-policy/">privacy policy</a>.</p>
+      <p class="privacy">We'll only use your details to prepare and send your quote. See our <a href="https://www.maxski.com/privacy-policy/" target="_blank" rel="noopener noreferrer">privacy policy</a>.</p>
       <button type="submit" class="cta" id="submit-quote">Get my quote</button>
       <div class="send-error" id="send-error" role="alert" hidden>
         <p><strong>Sorry, we couldn't send your request just now.</strong></p>
@@ -408,13 +422,50 @@
   </section>
 </main>
 
+<!-- Footer copied from www.maxski.com (without the Quick Quote button) -->
+<footer class="site-footer">
+  <div class="wrap footer-cols">
+    <div>
+      <p>Max Ski Limited<br>Calls Wharf<br>2 The Calls<br>Leeds<br>LS2 7JU</p>
+      <p>Company No: 05324225<br>VAT 853172136</p>
+      <p>ATOL 6698 ABTA Y6694</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="https://www.maxski.com/wp-content/uploads/2024/06/Booking-Conditions-June-2024.docx.pdf" target="_blank" rel="noopener noreferrer">Booking Conditions</a></li>
+      <li><a href="https://www.maxski.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+      <li><a href="https://www.maxski.com/wp-content/uploads/2021/04/SAFEGUARDING-POLICY.pdf" target="_blank" rel="noopener noreferrer">Safeguarding Policy</a></li>
+      <li><a href="https://www.maxski.com/wp-content/uploads/2021/04/SUSTAINABLE-TOURISM.docx.pdf" target="_blank" rel="noopener noreferrer">Sustainability Policy</a></li>
+      <li><a href="https://app.termly.io/document/cookie-policy/69177765-3a66-49bb-81d5-df00524044b6" target="_blank" rel="noopener noreferrer">Cookie Policy</a></li>
+      <li><a href="https://www.gov.uk/foreign-travel-advice" target="_blank" rel="noopener noreferrer">Foreign Office Advice</a></li>
+    </ul>
+    <div>
+      <p><a href="mailto:hello@maxski.com">hello@maxski.com</a><br><a href="tel:+441937558822">+44 (0) 1937 558822</a><br>Monday – Friday. 09:00 – 17:30</p>
+    </div>
+  </div>
+  <div class="footer-base">
+    <div class="wrap">
+      <p>Copyright 2001-2026 Max Ski | All Rights Reserved</p>
+      <ul class="footer-social">
+        <li><a href="https://www.facebook.com/pages/Max-Ski/128722870562606" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+        <li><a href="https://www.instagram.com/maxskiofficial/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        <li><a href="https://twitter.com/maxskiofficial" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+        <li><a href="https://www.youtube.com/@MaxSkiOfficial" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
 <script>
 (function () {
   var MAX_PER_ROOM = 4, MAX_AIRPORTS = 3, MAX_ROOMS = 5;
   var MAX_NAME = 100, MAX_EMAIL = 254, SEND_TIMEOUT_MS = 15000;
   var WEB3FORMS_URL = 'https://api.web3forms.com/submit';
   var WEB3FORMS_KEY = '70c25378-2c57-4fbd-ae12-303752893ab2'; // public by design: Web3Forms keys only allow sending to the key owner's inbox
-  var ALLOWED_DATES = ['2027-02-13', '2027-03-27'];
+  var DATES = [
+    { id: '2027-02-13', name: 'Saturday 13 February 2027' },
+    { id: '2027-03-27', name: 'Saturday 27 March 2027' },
+    { id: '2027-04-03', name: 'Saturday 3 April 2027' }
+  ];
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   var AIRPORTS = [
@@ -439,7 +490,7 @@
     return r;
   }
 
-  var state = { rooms: freshRooms(), roomCount: 1, airports: [], showAgeErrors: false };
+  var state = { rooms: freshRooms(), roomCount: 1, dates: [], airports: [], showAgeErrors: false };
 
   function $(id) { return document.getElementById(id); }
   function h(tag, attrs) {
@@ -467,11 +518,50 @@
     el.hidden = !msg;
     if (field) { if (msg) field.setAttribute('aria-invalid', 'true'); else field.removeAttribute('aria-invalid'); }
   }
-  function dateLabel() {
-    var s = $('travel-date');
-    return s.value ? s.options[s.selectedIndex].text : '';
+  // Chosen dates, earliest first.
+  function dateNames() {
+    return DATES.filter(function (d) { return state.dates.indexOf(d.id) > -1; }).map(function (d) { return d.name; });
   }
   function ageLabel(a) { return a === 0 ? 'under 1' : String(a); }
+
+  // Show enough of the address to recognise it, e.g. "an•••@g••••.com".
+  function maskEmail(email) {
+    var at = email.lastIndexOf('@');
+    var local = email.slice(0, at), domain = email.slice(at + 1);
+    var dot = domain.indexOf('.');
+    var host = domain.slice(0, dot), rest = domain.slice(dot);
+    function hide(s, keep) { return s.slice(0, keep) + new Array(Math.max(s.length - keep, 3) + 1).join('•'); }
+    return hide(local, local.length > 3 ? 2 : 1) + '@' + hide(host, 1) + rest;
+  }
+
+  /* ---------- dates ---------- */
+  function buildDates() {
+    DATES.forEach(function (d) {
+      var input = h('input', { type: 'checkbox', id: 'date-' + d.id, value: d.id, 'aria-describedby': 'date-hint err-date', on: { change: onDate } });
+      $('dates').appendChild(h('label', { class: 'chip' }, input, h('span', { text: d.name })));
+    });
+  }
+  function onDate() {
+    state.dates = DATES.filter(function (d) { return $('date-' + d.id).checked; }).map(function (d) { return d.id; });
+    if (state.dates.length) setError('err-date', '');
+    renderRooms();
+  }
+
+  /* ---------- bedrooms ---------- */
+  function syncBedrooms() {
+    $('bedrooms').textContent = String(state.roomCount);
+    $('bedrooms-minus').disabled = state.roomCount <= 1;
+    $('bedrooms-plus').disabled = state.roomCount >= MAX_ROOMS;
+  }
+  function changeBedrooms(delta) {
+    var next = state.roomCount + delta;
+    if (next < 1 || next > MAX_ROOMS) return;
+    state.roomCount = next;
+    syncBedrooms();
+    renderRooms();
+    var btn = $(delta > 0 ? 'bedrooms-plus' : 'bedrooms-minus');
+    (btn.disabled ? $(delta > 0 ? 'bedrooms-minus' : 'bedrooms-plus') : btn).focus();
+  }
 
   /* ---------- airports ---------- */
   function buildAirports() {
@@ -558,9 +648,11 @@
         if (age == null && state.showAgeErrors) { sel.setAttribute('aria-invalid', 'true'); missing = true; }
         grid.appendChild(h('div', null, h('label', { for: id, text: 'Child ' + (c + 1) }), sel));
       });
-      var when = dateLabel();
+      var when = dateNames()[0];
       el.appendChild(h('div', { class: 'ages' },
-        h('p', { class: 'hint', text: 'Age on the day you travel' + (when ? ', ' + when : '') + '.' }),
+        h('p', { class: 'hint', text: when
+          ? (state.dates.length > 1 ? 'Age on your earliest travel date, ' : 'Age on the day you travel, ') + when + '.'
+          : 'Age on the day you travel.' }),
         grid,
         missing ? h('p', { class: 'error', role: 'alert', text: 'Choose an age for each child in room ' + n + '.' }) : null
       ));
@@ -606,15 +698,15 @@
     var first = null;
     function fail(el) { if (!first) first = el; }
 
-    var date = $('travel-date');
-    if (ALLOWED_DATES.indexOf(date.value) < 0) { setError('err-date', 'Choose a travel date.', date); fail(date); } else setError('err-date', '', date);
+    var knownDates = state.dates.every(function (id) { return DATES.some(function (d) { return d.id === id; }); });
+    if (!state.dates.length || !knownDates) { setError('err-date', 'Choose at least one travel date.'); fail($('date-' + DATES[0].id)); } else setError('err-date', '');
 
     var knownAirports = state.airports.every(function (id) { return AIRPORTS.some(function (a) { return a.id === id; }); });
     if (!state.airports.length) { setError('err-airports', 'Pick at least one airport.'); fail($('airport-lba')); }
     else if (state.airports.length > MAX_AIRPORTS || !knownAirports) { setError('err-airports', 'Pick up to three airports from the list.'); fail($('airport-lba')); }
     else setError('err-airports', '');
 
-    if (!(state.roomCount >= 1 && state.roomCount <= MAX_ROOMS)) { state.roomCount = 1; $('bedrooms').value = '1'; fail($('bedrooms')); }
+    if (!(state.roomCount >= 1 && state.roomCount <= MAX_ROOMS)) { state.roomCount = 1; syncBedrooms(); fail($('bedrooms-plus')); }
 
     state.showAgeErrors = true;
     renderRooms();
@@ -660,7 +752,7 @@
       var r = state.rooms[i];
       var line = 'Room ' + (i + 1) + ': ' + plural(r.adults, 'adult', 'adults');
       if (r.children.length) {
-        line += ', ' + plural(r.children.length, 'child', 'children') + ' (aged ' + r.children.map(ageLabel).join(', ') + ' at departure)';
+        line += ', ' + plural(r.children.length, 'child', 'children') + ' (aged ' + r.children.map(ageLabel).join(', ') + ' on earliest travel date)';
       }
       lines.push(line);
     }
@@ -670,7 +762,7 @@
   // Plain-text body for the email the Max Ski team receives.
   function messageText(name, email) {
     return [
-      'Travel date: ' + dateLabel(),
+      'Travel dates: ' + dateNames().join(', '),
       'Preferred airports (in order chosen): ' + airportNames().join(', '),
       'Bedrooms: ' + state.roomCount,
       '',
@@ -721,16 +813,24 @@
     var name = $('lead-name').value.trim();
     var email = $('lead-email').value.trim();
     $('done-title').textContent = 'Thanks, ' + name.split(/\s+/)[0] + '. Your quote request has been sent.';
-    $('done-lead').textContent = 'The Max Ski team will be in touch at ' + email + '. Here is what you sent us.';
+    var lead = $('done-lead');
+    lead.textContent = '';
+    lead.append(
+      'A tour coordinator at Max Ski will be back in touch soon with some quotes for your consideration. If you have any questions in the meantime, contact us at ',
+      h('a', { href: 'mailto:hello@maxski.com', text: 'hello@maxski.com' }),
+      ' or give us a call on ',
+      h('a', { href: 'tel:+441937558822', text: '+44 (0) 1937 558822' }),
+      '.'
+    );
 
     var s = $('summary');
     s.textContent = '';
-    s.appendChild(summaryRow('Travel date', [dateLabel()]));
+    s.appendChild(summaryRow(state.dates.length > 1 ? 'Travel dates' : 'Travel date', dateNames()));
     s.appendChild(summaryRow('Airports', [airportNames().join(', ')]));
     s.appendChild(summaryRow('Bedrooms', [String(state.roomCount)]));
     s.appendChild(summaryRow('Travellers', roomLines()));
     s.appendChild(summaryRow('Name', [name]));
-    s.appendChild(summaryRow('Email', [email]));
+    s.appendChild(summaryRow('Email', [maskEmail(email)]));
 
     $('quote-form').hidden = true;
     $('hero-copy').hidden = true;
@@ -747,29 +847,26 @@
   }
 
   function reset() {
-    state = { rooms: freshRooms(), roomCount: 1, airports: [], showAgeErrors: false };
+    state = { rooms: freshRooms(), roomCount: 1, dates: [], airports: [], showAgeErrors: false };
     $('quote-form').reset();
     ['err-date', 'err-airports', 'err-name', 'err-email'].forEach(function (id) { setError(id, ''); });
-    ['travel-date', 'lead-name', 'lead-email'].forEach(function (id) { $(id).removeAttribute('aria-invalid'); });
+    ['lead-name', 'lead-email'].forEach(function (id) { $(id).removeAttribute('aria-invalid'); });
     syncAirports();
+    syncBedrooms();
     renderRooms();
     showForm();
   }
 
   /* ---------- wire up ---------- */
+  buildDates();
   buildAirports();
   syncAirports();
+  syncBedrooms();
   renderRooms();
 
   $('more-airports').addEventListener('click', showMoreAirports);
-  $('travel-date').addEventListener('change', function (e) {
-    if (e.target.value) setError('err-date', '', e.target);
-    renderRooms();
-  });
-  $('bedrooms').addEventListener('change', function (e) {
-    state.roomCount = Number(e.target.value);
-    renderRooms();
-  });
+  $('bedrooms-minus').addEventListener('click', function () { changeBedrooms(-1); });
+  $('bedrooms-plus').addEventListener('click', function () { changeBedrooms(1); });
   $('lead-name').addEventListener('input', function (e) { if (e.target.value.trim()) setError('err-name', '', e.target); });
   $('lead-email').addEventListener('input', function (e) { if ($('err-email').hidden === false && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.target.value.trim())) setError('err-email', '', e.target); });
   var sending = false;
@@ -799,7 +896,7 @@
       setSending(false);
     });
   });
-  $('start-again').addEventListener('click', function () { reset(); $('travel-date').focus(); });
+  $('start-again').addEventListener('click', function () { reset(); $('date-' + DATES[0].id).focus(); });
 })();
 </script>
 
