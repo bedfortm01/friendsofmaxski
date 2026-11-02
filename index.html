@@ -7,8 +7,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=Rubik:wght@300;400;500&display=swap">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <style>
-  /* Layout: one left-aligned column, 720px wide. A tinted hero band with the offer,
-     then five questions in order on white, one call to action at the end.
+  /* Layout: one left-aligned column, 720px wide, embedded in an iframe on maxski.com.
+     Five questions in order on white, one call to action at the end.
      Single light look on purpose, so every tester sees the same Max Ski page. */
   :root {
     --teal: #00c6a5;        /* Max Ski primary */
@@ -51,18 +51,6 @@
     padding-inline: var(--gutter);
   }
 
-  /* ---------- header and hero ---------- */
-  .hero { background: var(--wash); }
-  .brandbar { padding-block: 18px 0; }
-  .logo-link { display: inline-block; }
-  /* The logo PNG has a white background; multiply lets the hero tint show through it. */
-  .logo { display: block; width: 150px; height: auto; mix-blend-mode: multiply; }
-  .hero-copy {
-    padding-block: 28px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
   h1 {
     margin: 0;
     font-family: var(--display);
@@ -74,8 +62,6 @@
     text-wrap: balance;
   }
   .lead { margin: 0; font-size: 1.12rem; max-width: 60ch; }
-  .hero-copy p { margin: 0; max-width: 60ch; }
-  .ridge { display: block; width: 100%; height: auto; }
 
   /* ---------- form ---------- */
   form { padding-block: 8px 24px; }
@@ -276,23 +262,6 @@
   main { padding-bottom: 48px; }
   .bedrooms-row { max-width: 360px; background: var(--wash); border-radius: 14px; padding: 12px 18px; }
 
-  /* footer, as on www.maxski.com */
-  .site-footer { background: var(--teal); color: var(--ink); font-size: 0.95rem; }
-  .site-footer a { color: var(--ink); text-underline-offset: 3px; }
-  .site-footer p { margin: 0 0 14px; }
-  .footer-cols {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-    padding-block: 36px 22px;
-  }
-  @media (max-width: 640px) { .footer-cols { grid-template-columns: 1fr; gap: 6px; } }
-  .footer-links { list-style: none; margin: 0 0 14px; padding: 0; }
-  .footer-links li + li { margin-top: 2px; }
-  .footer-base { background: #39394e; color: #ffffff; font-size: 0.88rem; }
-  .footer-base .wrap { padding-block: 18px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 20px; }
-  .footer-base p { margin: 0; }
-  .footer-base a { color: #ffffff; }
-  .footer-social { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 16px; }
-
   /* confirmation */
   .done { padding-block: 36px 12px; display: flex; flex-direction: column; gap: 18px; }
   .done h1:focus { outline: none; }
@@ -314,25 +283,6 @@
 </style>
 </head>
 <body>
-
-<header class="hero">
-  <div class="wrap">
-    <div class="brandbar"><a href="https://www.maxski.com/" target="_blank" rel="noopener noreferrer" class="logo-link"><img class="logo" src="images/maxski-logo.png" alt="Max Ski" width="449" height="159"></a></div>
-    <div class="hero-copy" id="hero-copy">
-      <h1>Family and group ski trips in Folgarida 26/27</h1>
-      <p class="lead">A week in Folgarida in the Dolomites, packaged from door to piste. Flights, hotel, lift pass, kit and paperwork all sorted before you land.</p>
-      <p>Share a few details with us for a quote tailored to you. All quotes include bed and breakfast in hotels close to the ski lifts, lift passes and ski equipment.</p>
-    </div>
-    <svg class="ridge" viewBox="0 0 760 120" aria-hidden="true" focusable="false">
-      <circle cx="604" cy="42" r="20" fill="#ff9800"/>
-      <polygon points="0,120 92,52 172,92 270,32 360,96 452,50 540,100 644,60 760,120" fill="#00c6a5"/>
-      <polygon points="40,120 150,78 240,112 340,70 440,114 560,84 660,116 700,104 730,120" fill="#12888c"/>
-      <polygon points="270,32 252,43 266,47 276,42 289,45" fill="#ffffff"/>
-      <polygon points="92,52 78,62.5 90,65 99,61 106,61" fill="#ffffff"/>
-      <polygon points="452,50 438,57 450,61 459,57 465,59" fill="#ffffff"/>
-    </svg>
-  </div>
-</header>
 
 <main class="wrap">
   <form id="quote-form" novalidate>
@@ -421,39 +371,6 @@
     </div>
   </section>
 </main>
-
-<!-- Footer copied from www.maxski.com (without the Quick Quote button) -->
-<footer class="site-footer">
-  <div class="wrap footer-cols">
-    <div>
-      <p>Max Ski Limited<br>Calls Wharf<br>2 The Calls<br>Leeds<br>LS2 7JU</p>
-      <p>Company No: 05324225<br>VAT 853172136</p>
-      <p>ATOL 6698 ABTA Y6694</p>
-    </div>
-    <ul class="footer-links">
-      <li><a href="https://www.maxski.com/wp-content/uploads/2024/06/Booking-Conditions-June-2024.docx.pdf" target="_blank" rel="noopener noreferrer">Booking Conditions</a></li>
-      <li><a href="https://www.maxski.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
-      <li><a href="https://www.maxski.com/wp-content/uploads/2021/04/SAFEGUARDING-POLICY.pdf" target="_blank" rel="noopener noreferrer">Safeguarding Policy</a></li>
-      <li><a href="https://www.maxski.com/wp-content/uploads/2021/04/SUSTAINABLE-TOURISM.docx.pdf" target="_blank" rel="noopener noreferrer">Sustainability Policy</a></li>
-      <li><a href="https://app.termly.io/document/cookie-policy/69177765-3a66-49bb-81d5-df00524044b6" target="_blank" rel="noopener noreferrer">Cookie Policy</a></li>
-      <li><a href="https://www.gov.uk/foreign-travel-advice" target="_blank" rel="noopener noreferrer">Foreign Office Advice</a></li>
-    </ul>
-    <div>
-      <p><a href="mailto:hello@maxski.com">hello@maxski.com</a><br><a href="tel:+441937558822">+44 (0) 1937 558822</a><br>Monday – Friday. 09:00 – 17:30</p>
-    </div>
-  </div>
-  <div class="footer-base">
-    <div class="wrap">
-      <p>Copyright 2001-2026 Max Ski | All Rights Reserved</p>
-      <ul class="footer-social">
-        <li><a href="https://www.facebook.com/pages/Max-Ski/128722870562606" target="_blank" rel="noopener noreferrer">Facebook</a></li>
-        <li><a href="https://www.instagram.com/maxskiofficial/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-        <li><a href="https://twitter.com/maxskiofficial" target="_blank" rel="noopener noreferrer">Twitter</a></li>
-        <li><a href="https://www.youtube.com/@MaxSkiOfficial" target="_blank" rel="noopener noreferrer">YouTube</a></li>
-      </ul>
-    </div>
-  </div>
-</footer>
 
 <script>
 (function () {
@@ -833,7 +750,6 @@
     s.appendChild(summaryRow('Email', [maskEmail(email)]));
 
     $('quote-form').hidden = true;
-    $('hero-copy').hidden = true;
     $('done').hidden = false;
     window.scrollTo(0, 0);
     $('done-title').focus();
@@ -842,7 +758,6 @@
   function showForm() {
     $('done').hidden = true;
     $('quote-form').hidden = false;
-    $('hero-copy').hidden = false;
     window.scrollTo(0, 0);
   }
 
